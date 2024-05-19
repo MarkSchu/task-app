@@ -1,0 +1,20 @@
+{
+    "name": "name",
+    "version": "1.0.0",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "netlify dev"
+    },
+    "author": "Mark Schumaker",
+    "license": "ISC",
+    "devDependencies": {
+        "http-server": "14.1.0",
+        "netlify-cli": "^13.2.1"
+    },
+    "dependencies": {
+        "gotrue-js": "^0.9.29",
+        "mongodb": "^5.1.0",
+        "mongoose": "^8.1.2"
+    }
+}
+
