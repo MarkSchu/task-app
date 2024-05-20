@@ -10,11 +10,11 @@ export const general = new ObservableVar();
 export const initLoadComplete = new ObservableEvent();
 
 general.init = () => {
-    // if (user.isLoggedIn()) {
-    //     general.getAllUserData();
-    // } else {
-    //     pathname.redirect('/login');
-    // }
+    if (user.isLoggedIn()) {
+        general.getAllUserData();
+    } else {
+        pathname.redirect('/login');
+    }
 }
 
 general.getAllUserData = () => {

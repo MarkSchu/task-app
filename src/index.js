@@ -152,7 +152,7 @@ function DashControls() {
 
     const handleClick = () => {
         if (form.reportValidity()) {
-            // .create(data).then(() => form.reset())
+            tasks.create(data).then(() => form.reset())
         }
     }
 
@@ -205,7 +205,6 @@ function Dash() {
 
 pathname.onEmit((value) => {
     const {body} = document;
-    
     if (value === '/dash') {
         render(body, Dash());
         initDash();
