@@ -3,6 +3,8 @@ import { listen2, bind2 } from 'utils/binders.js';
 import { pathname } from 'state/pathname.js';
 import { user } from 'state/user.js';
 import { api } from 'utils/api.js';
+import { Login } from 'components/login.js';
+import { Signup } from 'components/signup.js';
 import { ObservableEvent, ObservableVar, ObservableBool, ObservableArray } from 'utils/observable.js';
 
 // // tasks.set();
@@ -60,7 +62,7 @@ function getData() {
         } else {
             async.emit('error');
         }
-    })
+    });
 }
 
 function initDash() {
@@ -204,10 +206,20 @@ function Dash() {
 }
 
 pathname.onEmit((value) => {
+
     const {body} = document;
+
     if (value === '/dash') {
         render(body, Dash());
         initDash();
+    }
+
+    if (value === '/signup') {
+        render(body, Signup());
+    }
+
+    if (value === '/login') {
+        render(body, Login());
     }
 });
 

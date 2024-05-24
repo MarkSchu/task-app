@@ -2,7 +2,7 @@ import { ObservableVar } from 'utils/observable.js';
 import { pathname } from 'state/pathname.js';
 
 const auth = new GoTrue({
-  APIUrl: 'https://spontaneous-nougat-f22d85.netlify.app/.netlify/identity',
+//   APIUrl: 'https://spontaneous-nougat-f22d85.netlify.app/.netlify/identity',
   setCookie: true
 });
 
