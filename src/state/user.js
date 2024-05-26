@@ -1,60 +1,60 @@
 import { ObservableVar } from 'utils/observable.js';
 import { pathname } from 'state/pathname.js';
-
-const auth = new GoTrue({
-//   APIUrl: 'https://spontaneous-nougat-f22d85.netlify.app/.netlify/identity',
-  setCookie: true
-});
+import { asyncRequest } from 'state/async-request.js';
 
 export const user = new ObservableVar();
+let auth;
 
-netlifyIdentity.on('init', userData => {
-    user.set(userData);
-});
+export function initUser () {
+    auth = new GoTrue({
+        APIUrl: 'https://vanillajstaskapp.netlify.app/.netlify/identity',
+        setCookie: false
+    });
+}
 
 user.current = () => {
     return auth.currentUser();
 }
 
 user.signup = (email, password) => {
-    alerts.creating();
+    asyncRequest.emit('start');
     return auth.signup(email, password)
     .then(() => 
         auth.login(email, password, true)
     )
     .then(() => {
-        user.set(auth.currentUser());
-        pathname.redirect('/dash');
-        alerts.close()
+        pathname.redirect('/');
+        asyncRequest.emit('stop')
     })
     .catch((err) => {
-        alerts.error(err?.json?.msg || 'Something went wrong.');
+        console.log(err)
+        // asyncRequest.emit(err?.json?.msg || 'Something went wrong.');
     });
 }
 
 user.login = (email, password) => {
-    alerts.loading();
+    asyncRequest.loading();
     return auth.login(email, password, true)
     .then(() => {
-        user.set(auth.currentUser());
         pathname.redirect('/dash');
-        alerts.close()
+        asyncRequest.close()
     })
     .catch((err) => {
-        alerts.error(err?.json['error_description'] || 'Something went wrong.');
+        console.log(err)
+        // console.log(err?.json['error_description'] || 'Something went wrong.')
+        // asyncRequest.error();
     });
 }
 
 user.logout = () => {
-    alerts.loading();
+    asyncRequest.loading();
     auth.currentUser().logout()
     .then(() => {
-        user.set(undefined);
         pathname.redirect('/login');
-        alerts.close();
+        asyncRequest.close();
     })
     .catch((err) => {
-        alerts.error(err?.json['error_description'] || 'Something went wrong.');
+        asyncRequest.error(err?.json['error_description'] || 'Something went wrong.');
     })
 }
 

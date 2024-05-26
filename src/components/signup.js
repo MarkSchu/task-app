@@ -1,5 +1,6 @@
 import { element } from 'utils/dom.js';
 import { user } from 'state/user.js';
+import { AsyncDisplay } from 'components/async-display.js';
 
 export const Signup = () => {
 
@@ -15,6 +16,7 @@ export const Signup = () => {
 
     return (
         element('div', {className: 'form-page'},
+            AsyncDisplay(),
             form = element('form', {},
                 element('h1', {
                     className: 'h1',

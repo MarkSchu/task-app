@@ -78,6 +78,12 @@ export function render(el, newChild) {
     addChildren(el, [newChild]);
 }
 
+export function renderBody(newChild) {
+    const { body } = document;
+    clearChildren(body);
+    addChildren(body, [newChild]);
+}
+
 export function repeat(array, createElement) {
     // return array of elements
     return array.map((item) => {

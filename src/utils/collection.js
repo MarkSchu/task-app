@@ -1,8 +1,13 @@
 import { ObservableArray } from 'utils/observable.js';
 import { api } from 'utils/api.js';
-import { alerts } from 'state/alerts.js';
-import { sortByDates } from 'utils/dates.js';
+// import { alerts } from 'state/alerts.js';
 
+// // tasks.set();
+// // tasks.add();
+// // tasks.remove();
+// // tasks.updateTask();
+// // filter(params);
+// // sort(params);
 
 export class Collection extends ObservableArray {
 
@@ -13,43 +18,43 @@ export class Collection extends ObservableArray {
     }
 
     create(data) {
-        alerts.creating();
+        // alerts.creating();
         const collection = this.collection;
         return api('create', collection, data).then((response) => {
             if (response.status < 300) {
                 collections[collection].addAndSort(response.body);
-                alerts.close();
+                // alerts.close();
             } else {
-                alerts.error(response.statusText);
+                // alerts.error(response.statusText);
             }
         });
-    }4
+    }
     
     update(_id, changes) {
-        alerts.saving();
+        // alerts.saving();
         const collection = this.collection;
         changes.type = collection;
         const data = {_id, changes };
         return api('updateById', collection, data).then((response) => {
             if (response.status < 300) {
                 collections[collection].replaceAndSort(response.body);
-                alerts.close();
+                // alerts.close();
             } else {
-                alerts.error(response.statusText);
+                // alerts.error(response.statusText);
             }
         });
     }
     
     delete (_id) {
-        alerts.deleting();
+        // alerts.deleting();
         const collection = this.collection;
         const data = {_id};
         return api('deleteById', collection, data).then((response) => {
             if (response.status < 300) {
                 collections[collection].remove(_id);
-                alerts.close();
+                // alerts.close();
             } else {
-                alerts.error(response.statusText);
+                // alerts.error(response.statusText);
             }
         });
     }
@@ -74,26 +79,16 @@ export class Collection extends ObservableArray {
         const index = this.value.findIndex(item => item._id === newItem._id);
         if (index !== -1) {
             this.value[index] = newItem;
-            this.value = sortByDates(this.value);
             this.emit();
         }
     }
 
     addAndSort(item) {
         this.value.push(item);
-        this.value = sortByDates(this.value);
         this.emit();
     }
 
     findById(_id) {
         return this.value.find(domain => domain._id === _id);
     }
-}
-
-export const collections = {
-    any: new Collection('any'),
-    items: new Collection('items'),
-    tasks: new Collection('tasks'),
-    events: new Collection('events'),
-    domains: new Collection('domains')
 }
