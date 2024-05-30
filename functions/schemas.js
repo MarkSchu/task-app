@@ -7,7 +7,7 @@ const tag = new Schema({
     creationDate: String
 });
 
-const item = new Schema({
+const task = new Schema({
     type: String,
     title: String,
     tag: String,
@@ -17,7 +17,7 @@ const item = new Schema({
 
 module.exports = {
     'tags': mongoose.model('tag', tag),
-    'items': mongoose.model('item', item),
+    'tasks': mongoose.model('item', task),
 }
 
  

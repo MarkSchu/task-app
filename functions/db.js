@@ -39,12 +39,14 @@ db.deleteById = async (userId, collection, data) => {
     }
 }
 
-db.init = async (userId) => {
-    const items = await schemas['items'].find({userId});
+db.initData = async (userId) => {
+    const tasks = await schemas['tasks'].find({userId});
+    const tags = await schemas['tags'].find({userId});
     return {
         statusCode: 200,
         body: JSON.stringify({
-            items
+            tasks,
+            tags
         })
     }
 }

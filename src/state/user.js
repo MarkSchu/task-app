@@ -33,11 +33,11 @@ user.signup = (email, password) => {
 }
 
 user.login = (email, password) => {
-    asyncRequest.loading();
+    asyncRequest.emit('start');
     return auth.login(email, password, true)
     .then(() => {
-        pathname.redirect('/dash');
-        asyncRequest.close()
+        pathname.redirect('/');
+        asyncRequest.emit('stop')
     })
     .catch((err) => {
         console.log(err)

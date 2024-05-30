@@ -8,7 +8,7 @@ import { Signup } from 'components/signup.js';
 import { ObservableEvent, ObservableVar, ObservableBool, ObservableArray } from 'utils/observable.js';
 import { asyncRequest } from 'state/async-request.js';
 import { AsyncDisplay } from 'components/async-display.js';
-import { items, domains,  renderList } from 'state/collections.js';
+import { tasks, tags,  renderList } from 'state/collections.js';
 
 const options = {
     tags: {
@@ -27,11 +27,11 @@ const options = {
 
 const selection = new ObservableVar(options.all_tasks);
 
-function filter(items) {
-    return items;
-    return items.filter(item => {
+function filter(tasks) {
+    return tasks;
+    return tasks.filter(item => {
         if (selection.value._id === options.tags._id) {
-            return item.type === 'domains';
+            return item.type === 'tags';
         }
         if (selection.value._id === options.all_tasks._id) {
             return item.type === 'tasks'; 
@@ -46,7 +46,7 @@ function filter(items) {
 function Item(task) {
     return (
         element('div', {},
-            element('span', {textContent: task})
+            element('span', {textContent: task.title})
         )
     )
 }
@@ -54,17 +54,45 @@ function Item(task) {
 function DashList() {
     return (
         listen2('div', {}, renderList, () => {
-            return repeat(filter(items.value), Item)
+            return repeat(filter(tasks.value), Item)
         })
     )
 }
 
-function DomainInput () {
+function TagInput() {
 
-    const showMenu = new ObservableBool(false);
+    let form;
 
-    const showSelection = (el, val) => {
-        el.textContent = val.title;
+    const handleClick = () => {
+        if (form.reportValidity()) {
+            const data = {
+                title: form.elements.title.value
+            };
+            tags.create(data).then(() => form.reset())
+        }
+    }
+
+    return (
+        element('div', {},
+            form = element('form', {},
+                element('input', {
+                    required: true,
+                    type: 'text',
+                    name: 'title'
+                }),
+            ),
+            element('button', {
+                textContent: 'Create',
+                onclick: handleClick
+            })
+        )
+    )
+}
+
+function TagMenu(showMenu) {
+    
+    const toggleMenu = (el, value) => {
+        el.style.display = value ? 'block' : 'none';
     }
 
     const setSelection = (val) => {
@@ -72,13 +100,37 @@ function DomainInput () {
         showMenu.toggle();
         renderList.emit();
     }
+    
+    return (
+        element('div', {
+            style: {border: '1px solid blue'},
+            bind: [[showMenu, toggleMenu]]
+        },
+            bind2('div', {}, tags, (list) =>
+                repeat(list, (domain) => 
+                    element('div', {
+                        textContent: domain.title,
+                        onclick: () => setSelection(domain)
+                    })
+                ) 
+            ),
+            element('div', {
+                textContent: options.all_tasks.title,
+                onclick: () => setSelection(options.all_tasks)
+            }),
+            TagInput()
+        )
+    )
+}
+
+function TagSelect (showMenu) {
+
+    const showSelection = (el, val) => {
+        el.textContent = val.title;
+    }
 
     const setInputValue = (el, val) => {
         el.value = val._id;
-    }
-
-    const toggleMenu = (el, value) => {
-        el.style.display = value ? 'block' : 'none';
     }
 
     return (
@@ -87,54 +139,40 @@ function DomainInput () {
                 bind: [[selection, showSelection]],
                 onclick: () => showMenu.toggle()
             }),
-            element('div', {
-                bind: [[showMenu, toggleMenu]]
-            },
-                element('div', {
-                    textContent: options.tags.title,
-                    onclick: () => setSelection(options.tags)
-                }),
-                element('div', {
-                    textContent: options.tasks_with_no_tag.title,
-                    onclick: () => setSelection(options.tasks_with_no_tag)
-                }),
-                bind2('div', {}, domains, (list) =>
-                    repeat(list, (domain) => 
-                        element('div', {
-                            textContent: domain.title,
-                            onclick: () => setSelection(domain)
-                        })
-                    ) 
-                ),
-                element('div', {
-                    textContent: options.all_tasks.title,
-                    onclick: () => setSelection(options.all_tasks)
-                }),
-            ),
             element('input', {
                 type: 'hidden', 
+                name: 'tag',
                 bind: [[selection, setInputValue]]
             })
         )
     )
 }
 
-function DashControls() {
+function TaskInput(showMenu) {
 
     let form;
 
-    const handleClick = () => {
+    const handleClick = (e) => {
+       e.preventDefault();
         if (form.reportValidity()) {
-            items.create(data).then(() => form.reset())
+            const data = {
+                title: form.elements.title.value,
+                tag: form.elements.tag.value,
+                duedate: form.elements.duedate.value || ''
+            };
+            tasks.create(data).then(() => form.reset())
         }
     }
 
     return (
         element('div', {},
             form = element('form', {},
-                DomainInput(),
+                TagSelect(showMenu),
                 element('div', {},
-                    element('input', {type: 'text'}),
+                    element('input', {
+                        type: 'text',
+                        name: 'title'
+                    }),
                     element('button', {
                         required: true,
                         textContent: 'Add',
@@ -142,8 +180,11 @@ function DashControls() {
                     })
                 ),
                 element('div', {},
-                    element('label', {textContent: 'Due '}),
-                    element('input', {type: 'date'})
+                    element('label', {textContent: 'Due: '}),
+                    element('input', {
+                        type: 'date',
+                        name: 'duedate'
+                    })
                 )
             )
         )
@@ -151,11 +192,13 @@ function DashControls() {
 }
 
 export function Dash() {
+    const showMenu = new ObservableBool(false);
     return (
         element('div', {},
             AsyncDisplay(),
             DashList(),
-            DashControls()
+            TaskInput(showMenu),
+            TagMenu(showMenu)
         )
     )
 }
