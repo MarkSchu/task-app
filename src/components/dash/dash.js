@@ -51,9 +51,9 @@ function Item(task) {
     )
 }
 
-function DashList() {
+function List() {
     return (
-        listen2('div', {}, renderList, () => {
+        listen2('div', {className: 'list'}, renderList, () => {
             return repeat(filter(tasks.value), Item)
         })
     )
@@ -196,9 +196,9 @@ export function Dash() {
     return (
         element('div', {},
             AsyncDisplay(),
-            DashList(),
-            TaskInput(showMenu),
-            TagMenu(showMenu)
+            List(),
+            // TaskInput(showMenu),
+            // TagMenu(showMenu)
         )
     )
 }
