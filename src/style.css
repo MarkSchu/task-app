@@ -1,0 +1,180 @@
+body {
+    margin: 0;
+    font-family: 'Noto sans';
+    font-size: 1rem;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.tasks {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    transition: left 0.15s ease-in;
+    bottom: 0;
+    right: 0;
+    top: 0;
+}
+
+.tasks.hide {
+    left: 160px;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    padding: 0.5rem 0.75rem;
+}
+
+.task .leftside {
+    min-width: 2.5rem;
+}
+
+.task .center {
+    width: 100%;
+}
+
+.task .details {
+    line-height: 1.75rem;
+}
+
+.task .rightside {
+    min-width: 2rem;
+    line-height: 1.75rem;
+    font-size: 1.5rem;
+}
+
+.task .checkbox {
+    height: 1.75rem;
+    width: 1.75rem;
+    border: 1px solid #00C9A7;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.task .checkbox .checkbox-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    margin: 0;  /* remove default margins */
+    z-index: 1;
+    cursor: pointer;
+}
+
+.task .checkbox .checkmark {
+    width: 85%;
+    height: 85%;
+    background-color: #00C9A7;
+    border-radius: 100%;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+}
+
+.task .checkbox .checkbox-input:checked ~ .checkmark {
+    opacity: 1;
+}
+
+.task .info {
+    line-height: 24px;
+}
+
+.task .delete-button {
+    margin: 0 0 0 1rem;
+    opacity: 0.1;
+    cursor: pointer;
+}
+
+.task-controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem;
+}
+
+.task-controls .tag-select {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.task-controls .input {
+    display: flex;
+}
+
+.task-controls .input textarea {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    margin-right: 0.25rem;
+}
+
+.task-controls .input textarea:active {
+    outline: none;
+    border: 1px solid #00C9A7;
+}
+
+.task-controls .input textarea:focus {
+    outline: none;
+    border: 1px solid #00C9A7;
+}
+
+.task-controls .input button {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.75rem 1rem;
+    background-color: #00C9A7;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #00C9A7;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.task-controls .tag-select {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.5rem 2rem;
+    border: 1px solid #ccc;
+    width: fit-content;
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    color:#00C9A7;
+    font-weight: bold;
+}
+
+/* ------------------------------------------------------ */
+
+.tag-menu {
+    border-right: 1px solid #ccc;
+    position: fixed;
+    width: 260px;
+    left: -260px;
+    transition: left 0.15s ease-out;
+    bottom: 0;
+    top: 0;
+    background-color: white;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.tag-menu.show {
+    left: 0;
+}
+
+
